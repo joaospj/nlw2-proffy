@@ -1,42 +1,61 @@
-import React from "react";
+import React from 'react';
 
-import whatsappIcon from "../../assets/images/icons/whatsapp.svg";
+import api from '../../services/api';
 
-import "./styles.css";
+import wppIcon from '../../assets/images/icons/whatsapp.svg';
 
-function TeacherItem() {
+import './styles.css';
+
+export interface Teacher {
+  id: number;
+  avatar: string;
+  bio: string;
+  cost: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id,
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img
-          src="https://media-exp1.licdn.com/dms/image/C4D03AQGuNmwgiGb2uQ/profile-displayphoto-shrink_200_200/0?e=1602115200&v=beta&t=9AS7-x803hjJZzUp3Zi6YFOsNhpootnaYqh9J0hUAF0"
-          alt="João Silva Junior"
-        />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>João Silva Junior</strong>
-          <span>Latim</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        <br /> <br />
-        Ea inventore fugiat aliquid nobis expedita consequatur dolorum eveniet
-        libero iusto eius optio ullam reprehenderit vero rem laborum nostrum
-        numquam distinctio accusamus dolorem, et minus dicta officiis dolores!
-        Consequuntur nisi reiciendis consequatur?
-      </p>
+
+      <p>{teacher.bio}</p>
+
       <footer>
         <p>
           Preço/hora
-          <strong>R$100,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
-        <button type="button">
-          <img src={whatsappIcon} alt="Whatsapp" />
+
+        <a
+          target="_blank"
+          onClick={createNewConnection}
+          href={`https://wa.me/${teacher.whatsapp}`}
+        >
+          <img src={wppIcon} alt="Whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
-}
+};
 
 export default TeacherItem;
